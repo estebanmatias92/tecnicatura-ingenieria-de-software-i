@@ -1,0 +1,42 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build",
+      "type": "shell",
+      "command": "bash",
+      "args": ["build.sh"],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$gcc"],
+      "detail": "Compile library + executable using build.sh"
+    },
+    {
+      "label": "build (with bear)",
+      "type": "shell",
+      "command": "bear",
+      "args": ["--", "bash", "build.sh"],
+      "group": "build",
+      "problemMatcher": ["$gcc"],
+      "detail": "Build and regenerate compile_commands.json for clangd"
+    },
+    {
+      "label": "run",
+      "type": "shell",
+      "command": "./app_main",
+      "group": "none",
+      "dependsOn": ["build"],
+      "detail": "Build and run the application"
+    },
+    {
+      "label": "clean",
+      "type": "shell",
+      "command": "rm",
+      "args": ["-f", "GreeterComponent.o", "libGreeter.so", "app_main"],
+      "group": "build",
+      "detail": "Remove build artifacts"
+    }
+  ]
+}
