@@ -29,7 +29,6 @@ code/
 ├── flake.nix                     # Entorno de desarrollo reproducido con Nix
 ├── .envrc                        # Activación automática con direnv
 ├── .clang-format                 # Configuración de formato de código
-├── compile_commands.json         # Base de datos de compilación para clangd
 ├── .vscode/
 │   ├── tasks.json                # Tareas de VS Code (build, run, clean)
 │   └── launch.json               # Configuración de debug con gdb
@@ -51,7 +50,7 @@ code/
 
 Este proyecto incluye un entorno de desarrollo reproducido vía **Nix flakes**
 que provee todas las herramientas necesarias (`g++`, `gdb`, `valgrind`,
-`clangd`, `clang-format`, `bear`, etc.) de forma aislada.
+ `clangd`, `clang-format`, etc.) de forma aislada.
 
 ### Prerrequisitos
 
@@ -110,15 +109,6 @@ A partir de ahora cada vez que entrés a `code/` el entorno se activa solo.
 | Compilación | `g++` (GCC), `clang++`, `make`, `cmake` |
 | Debug | `gdb`, `valgrind` |
 | LSP & Linting | `clangd`, `clang-tidy`, `clang-format` |
-| Compilation DB | `bear` (genera `compile_commands.json` automáticamente) |
-
-### Regenerar la base de datos de compilación (LSP)
-
-`clangd` necesita `compile_commands.json` para funcionar correctamente:
-
-```bash
-bear -- bash build.sh
-```
 
 ## Compilar y ejecutar
 
@@ -145,11 +135,6 @@ O directamente:
 ```bash
 chmod +x build.sh && ./build.sh
 ```
-
-> 💡 Para regenerar `compile_commands.json` (necesario para clangd LSP):
-> ```bash
-> bear -- bash build.sh
-> ```
 
 ### Windows (MinGW)
 

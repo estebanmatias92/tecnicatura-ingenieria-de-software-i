@@ -22,22 +22,19 @@
             name = "laboratorio-03-dev";
 
             packages = with pkgs; [
-              # --- Compilers ---
-              gcc
-              clang-tools               # clangd, clang-tidy, clang-format
-
-              # --- Build tools ---
+              # --- Build tools (only need PATH) ---
               cmake
               gnumake
 
               # --- Debug & Analysis ---
               gdb
               valgrind
+            ];
 
-              # --- LSP compilation database ---
-              bear
-
-              # --- System libs for C++ dynamic loading ---
+            buildInputs = with pkgs; [
+              # --- Compilers (need NIX_CFLAGS/NIX_LDFLAGS for headers) ---
+              gcc
+              clang-tools               # clangd, clang-tidy, clang-format
               glibc
             ];
 
@@ -50,12 +47,11 @@
               echo "│  make : $(make --version | head -1)           "
               echo "│  cmake: $(cmake --version | head -1)          "
               echo "│  gdb  : $(gdb --version | head -1)            "
-              echo "│  bear : $(bear --version 2>&1 | head -1)      "
               echo "│  nix  : $(nix --version)                      "
               echo "└──────────────────────────────────────────────┘"
               echo ""
               echo "Quick start:"
-              echo "  bear -- bash build.sh   # build + generate compile_commands.json"
+              echo "  bash build.sh           # build library + executable"
               echo "  ./app_main              # run the app"
               echo ""
             '';
