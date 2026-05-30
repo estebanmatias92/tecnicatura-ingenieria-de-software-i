@@ -1,0 +1,28 @@
+/* Colores personalizados para SampleVault */
+:root {
+    --vault-gold: #ffcc00;
+    --vault-dark: #121212;
+    --vault-grey: #242424;
+}
+
+body {
+    background-color: var(--vault-dark);
+    color: white;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+td{
+    background-color: #242424;
+}
+
+.vault-card {
+    background-color: var(--vault-grey) !important;
+    border: 1px solid #333;
+}
+
+/* Reproductor de audio personalizado minimalista */
+audio {
+    filter: sepia(20%) saturate(70%) grayscale(1) contrast(99%) invert(12%);
+    width: 100%;
+    height: 30px;
+}
