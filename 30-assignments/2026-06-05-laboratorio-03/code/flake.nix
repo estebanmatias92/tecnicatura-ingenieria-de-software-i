@@ -23,6 +23,7 @@
 
             packages = with pkgs; [
               # --- Build tools (only need PATH) ---
+	      gcc
               cmake
               gnumake
 
@@ -33,9 +34,9 @@
 
             buildInputs = with pkgs; [
               # --- Compilers (need NIX_CFLAGS/NIX_LDFLAGS for headers) ---
-              gcc
+              #gcc
               clang-tools               # clangd, clang-tidy, clang-format
-              glibc
+              #glibc
             ];
 
             shellHook = ''
@@ -52,7 +53,7 @@
               echo ""
               echo "Quick start:"
               echo "  bash build.sh           # build library + executable"
-              echo "  ./app_main              # run the app"
+              echo "  ./hostApp.bin              # run the app"
               echo ""
             '';
           };

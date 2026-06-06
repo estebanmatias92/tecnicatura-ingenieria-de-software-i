@@ -1,3 +1,15 @@
+/**
+ * @file SharedLibrary.hpp
+ * @author Gabriel Ferreira (gabrielinuz@fi.mdp.edu.ar)
+ * @brief C Plus Plus Component Model
+ * @version 1
+ * @date 2026-05-19
+ * 
+ * @copyright Copyright (c) 2026 Released under the MIT license
+ * @link https://opensource.org/licenses/MIT @endlink
+ * 
+ */
+ 
 #ifndef SHARED_LIBRARY_HPP
 #define SHARED_LIBRARY_HPP
 
