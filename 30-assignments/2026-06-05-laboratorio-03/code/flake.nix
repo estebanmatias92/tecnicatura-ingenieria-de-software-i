@@ -23,7 +23,7 @@
 
             packages = with pkgs; [
               # --- Build tools (only need PATH) ---
-	      gcc
+	            gcc
               cmake
               gnumake
 
