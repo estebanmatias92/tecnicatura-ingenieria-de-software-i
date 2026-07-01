@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Testing Endpoints REST C++</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="panel">
+        <h1>Consola de Pruebas API REST</h1>
+        
+        <div class="control-group">
+            <input type="text" id="inputNombre" placeholder="Ingresa un nombre para saludar">
+            <button id="btnSaludar">GET /api/saludar</button>
+        </div>
+
+        <div class="control-group buttons-row">
+            <button id="btnGetRecurso" class="btn-info">GET /recurso</button>
+            <button id="btnPut" class="btn-warning">PUT /recurso</button>
+            <button id="btnPatch" class="btn-secondary">PATCH /recurso</button>
+            <button id="btnDelete" class="btn-danger">DELETE /recurso</button>
+        </div>
+
+        <div class="control-group upload-group">
+            <input type="file" id="inputFile" class="file-input">
+            <button id="btnUpload" class="btn-success">POST /upload</button>
+        </div>
+
+        <div class="control-group buttons-row border-top">
+            <button id="btnLimpiar">Limpiar Consola</button>
+        </div>
+
+        <div class="terminal" id="terminalSalida">
+            </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

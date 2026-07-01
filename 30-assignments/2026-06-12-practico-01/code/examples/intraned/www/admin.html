@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - Isla de Conocimiento</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/png" href="img/favicon.png">
+</head>
+<body>
+    <header>
+        <h1>Panel de Gestión Educativa</h1>
+        <button onclick="localStorage.removeItem('admin_token'); window.location.href='/login.html';" class="btn" style="background:#e74c3c;">Cerrar Sesión</button>
+    </header>
+
+    <main id="app-admin" class="contenedor-centrado">
+        </main>
+
+    <script src="js/utils.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

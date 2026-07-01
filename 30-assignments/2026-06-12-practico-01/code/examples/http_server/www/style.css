@@ -1,0 +1,117 @@
+:root {
+    --bg-color: #f0f2f5;
+    --panel-bg: #ffffff;
+    --text-main: #333333;
+    --border-color: #cccccc;
+    --success: #28a745;
+    --warning: #ffc107;
+    --danger: #dc3545;
+    --primary: #007bff;
+    --info: #17a2b8;
+    --secondary: #6c757d;
+}
+
+body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    display: flex;
+    justify-content: center;
+    padding: 2rem;
+    margin: 0;
+}
+
+.panel {
+    background: var(--panel-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 600px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+h1 {
+    margin-top: 0;
+    font-size: 1.5rem;
+    border-bottom: 2px solid var(--bg-color);
+    padding-bottom: 0.5rem;
+}
+
+.control-group {
+    margin-bottom: 1.5rem;
+    display: flex;
+    gap: 10px;
+}
+
+.upload-group {
+    background-color: var(--bg-color);
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px dashed var(--border-color);
+}
+
+.buttons-row {
+    flex-wrap: wrap;
+}
+
+.border-top {
+    border-top: 1px solid var(--bg-color);
+    padding-top: 1rem;
+}
+
+input[type="text"] {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+}
+
+.file-input {
+    flex: 1;
+    padding: 0.3rem;
+}
+
+button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    background-color: var(--primary);
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    transition: opacity 0.2s;
+}
+
+button:hover { opacity: 0.9; }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Semantic Button Colors */
+.btn-success { background-color: var(--success); }
+.btn-warning { background-color: var(--warning); color: black; }
+.btn-danger { background-color: var(--danger); }
+.btn-info { background-color: var(--info); }
+.btn-secondary { background-color: var(--secondary); }
+
+.terminal {
+    background-color: #1e1e1e;
+    color: #00ff00;
+    font-family: monospace;
+    padding: 1rem;
+    border-radius: 4px;
+    min-height: 200px;
+    max-height: 400px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.log-entry {
+    border-bottom: 1px dashed #444;
+    padding-bottom: 4px;
+    word-break: break-all;
+}
+
+.log-error { color: #ff5555; }
+.log-status { color: #aaaaaa; font-size: 0.9em; margin-right: 8px; }
