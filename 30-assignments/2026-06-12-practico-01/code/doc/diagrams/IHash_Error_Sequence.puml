@@ -1,0 +1,41 @@
+@startuml IHash_Error_Sequence
+title IHash — Flujo de Error con Excepción Interna
+
+actor Host
+participant Application as APP
+participant HashComponent as HC
+participant "Sha256Engine" as ENG
+
+== Error por out-of-memory ==
+Host -> APP : upload file (data, len)
+APP -> HC : get_hash_size(SHA256, &size)
+HC --> APP : size = 64
+APP -> APP : alocar char[64]
+APP -> HC : hash(SHA256, data, len, hex, 64)
+HC -> ENG : compute(data, len)
+
+group try-catch
+  ENG -> ENG : std::bad_alloc (por memoria insuficiente)
+  note right #FF8888
+    catch (...)
+    return ERROR_INTERNAL
+  end note
+  ENG --> HC : excepción lanzada
+  HC -> HC : catch (...) genérico
+  HC --> APP : ComponentResult::ERROR_INTERNAL
+end
+
+APP -> APP : log error
+APP --> Host : ERROR_INTERNAL
+
+== Error por argumento inválido ==
+Host -> APP : upload file (null data)
+APP -> HC : hash(SHA256, nullptr, 0, hex, 64)
+note right #FF8888
+  validación temprana
+  sin entrar al engine
+end note
+HC --> APP : ComponentResult::ERROR_INVALID_ARGUMENT
+APP --> Host : ERROR_INVALID_ARGUMENT
+
+@enduml

@@ -34,10 +34,82 @@ Se rechazó el uso de cortes abruptos mediante `std::exit(EXIT_FAILURE)` dentro 
 * **`main.cpp`**: Punto de entrada declarativo y limpio de validaciones estructuradas. Atrapa errores fatales globales de infraestructura.
 * **`i_component.hpp`**: Define el contrato del ciclo de vida base del componente, la versión del ABI (`CURRENT_API_VERSION`) y los tipos de punteros a función de la C-API.
 * **`i_greeter.hpp`**: Interfaz de negocio pura compatible con el ABI para la funcionalidad de saludo.
+* **`i_hash.hpp`**: Interfaz de negocio pura compatible con el ABI para la funcionalidad de hashing criptográfico.
 * **`shared_library.hpp`**: Encapsulación RAII multiplataforma para las llamadas del sistema nativas (`dlopen`/`LoadLibrary`, `dlclose`/`FreeLibrary`).
 * **`module_manager.hpp`**: Factoría genérica encargada de validar la compatibilidad binaria del ABI y resolver instancias polimórficas de forma segura.
 * **`application.hpp`**: Orquestador de la lógica de negocio del Host.
 * **`greeter_component.cpp`**: Implementación de la funcionalidad del plugin y exportación explícita de las funciones factoría de la C-API.
+* **`hash_component.cpp`**: **Implementación del componente Hash con soporte para MD5, SHA-1 y SHA-256, y exportación explícita de la C-API.**
+
+## ⧉ Nuevo Componente: IHash
+
+El componente `IHash` agrega servicios de hashing criptográfico al modelo. Su especificación completa (análisis y diseño) está en [`doc/IHash_Component_Spec.md`](./doc/IHash_Component_Spec.md).
+
+### Interfaz de negocio
+
+```cpp
+enum class HashAlgorithm : int {
+    MD5    = 0,  // 32 chars hex + null
+    SHA1   = 1,  // 40 chars hex + null
+    SHA256 = 2   // 64 chars hex + null
+};
+
+class IHash : public IComponent {
+public:
+    virtual ComponentResult get_hash_size(
+        HashAlgorithm algorithm, size_t* out_size
+    ) noexcept = 0;
+
+    virtual ComponentResult hash(
+        HashAlgorithm algorithm,
+        const unsigned char* data, size_t data_len,
+        char* out_hex, size_t hex_size
+    ) noexcept = 0;
+
+    virtual ComponentResult verify(
+        HashAlgorithm algorithm,
+        const unsigned char* data, size_t data_len,
+        const char* expected_hex
+    ) noexcept = 0;
+};
+```
+
+### Consumo desde el Host
+
+```cpp
+// 1. Cargar el módulo como cualquier otro componente
+module_manager_.load_module("./lib/hash");
+
+// 2. Instanciar (dynamic_cast seguro vía ModuleManager)
+auto hasher = module_manager_.create_instance<IHash>("hash");
+
+// 3. Consultar tamaño del buffer hex para SHA-256
+size_t hex_size;
+hasher->get_hash_size(HashAlgorithm::SHA256, &hex_size);
+
+// 4. Hashear un bloque de datos
+std::vector<char> hex(hex_size);
+hasher->hash(HashAlgorithm::SHA256,
+    reinterpret_cast<const unsigned char*>(data),
+    data_len, hex.data(), hex.size());
+
+// 5. Verificar contra un hash esperado
+hasher->verify(HashAlgorithm::SHA256,
+    reinterpret_cast<const unsigned char*>(data),
+    data_len, "e3b0c44298fc1c149afbf4c8996fb924...");
+```
+
+### Integración con Intraned
+
+El `IHash` se acopla naturalmente al `POST /api/upload` de Intraned para calcular un checksum de cada recurso subido y almacenarlo en SQLite. También puede usarse en `GET /recursos/*` para verificar la integridad del archivo antes de servirlo (ver `doc/IHash_Component_Spec.md`, sección 7).
+
+### Build
+
+```bash
+# Compilar el componente Hash como biblioteca compartida
+g++ -std=c++17 -c -fPIC src/hash_component.cpp -o hash_component.o
+g++ -std=c++17 -shared -o lib/hash.so hash_component.o
+```
 
 ## ⧉ Compilación
 
@@ -55,7 +127,7 @@ g++ -std=c++17 main.cpp -o host.app -ldl
 
 # 3. Ejecutar la aplicación
 ./host.app
-```
+```text
 ## ⧉ Estructura de directorios
 ```text
 ├── doc/                        # Documentación y modelos UML
@@ -63,6 +135,7 @@ g++ -std=c++17 main.cpp -o host.app -ldl
 │   ├── application.hpp         # Clase Orquestadora de la lógica de negocio de la aplicación.
 │   ├── i_component.hpp         # Interfaz base para todos los componentes.
 │   ├── i_greeter.hpp           # Interfaz específica para el componente Greeter.
+│   ├── i_hash.hpp              # Interfaz específica para el componente Hash.
 │   ├── module_manager.hpp      # Gestor central de módulos que resuelve la instanciación segura.
 │   ├── shared_library.hpp      # Clase RAII para gestionar el ciclo de vida de una biblioteca dinámica.
 ├── lib/
@@ -71,6 +144,7 @@ g++ -std=c++17 main.cpp -o host.app -ldl
 │   ├── Logo de la aplicación.
 ├── src/
 │   ├── greeter_component.cpp   # Implementación del componente Greeter.
+│   ├── hash_component.cpp      # Implementación del componente Hash.
 ```
 ## ⧉ Diagrama de componentes
 # <img src="doc/Diagrama_de_componentes.png" align="center"> 

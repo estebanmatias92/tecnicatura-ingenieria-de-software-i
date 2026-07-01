@@ -1,0 +1,56 @@
+@startuml IHash_Class_Diagram
+title IHash — Jerarquía de Clases
+
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam linetype ortho
+
+abstract class IComponent {
+  + {abstract} ~IComponent() noexcept
+}
+
+interface IHash {
+  + {abstract} get_hash_size(HashAlgorithm, size_t*) noexcept : ComponentResult
+  + {abstract} hash(HashAlgorithm, unsigned char*, size_t, char*, size_t) noexcept : ComponentResult
+  + {abstract} verify(HashAlgorithm, unsigned char*, size_t, char*) noexcept : ComponentResult
+}
+
+class HashComponent {
+  - Sha256Engine sha256_
+  - Sha1Engine sha1_
+  - Md5Engine md5_
+  + get_hash_size(HashAlgorithm, size_t*) noexcept : ComponentResult
+  + hash(HashAlgorithm, unsigned char*, size_t, char*, size_t) noexcept : ComponentResult
+  + verify(HashAlgorithm, unsigned char*, size_t, char*) noexcept : ComponentResult
+}
+
+class Sha256Engine {
+  + compute(unsigned char*, size_t, char*) noexcept : ComponentResult
+}
+
+class Sha1Engine {
+  + compute(unsigned char*, size_t, char*) noexcept : ComponentResult
+}
+
+class Md5Engine {
+  + compute(unsigned char*, size_t, char*) noexcept : ComponentResult
+}
+
+class "extern \"C\"\n— C-API" as C_API {
+  + get_api_version() noexcept : int
+  + create_component() noexcept : IComponent*
+  + destroy_component(IComponent*) noexcept : void
+}
+
+IComponent <|-- IHash : <<interface>>
+IHash <|.. HashComponent : <<realize>>
+HashComponent *-- Sha256Engine : composition
+HashComponent *-- Sha1Engine   : composition
+HashComponent *-- Md5Engine    : composition
+HashComponent ..> C_API : exports
+
+note top of IComponent : include/i_component.hpp
+note top of IHash : include/i_hash.hpp
+note top of HashComponent : src/hash_component.cpp
+
+@enduml

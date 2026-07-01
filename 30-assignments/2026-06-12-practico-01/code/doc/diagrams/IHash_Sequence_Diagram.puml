@@ -1,0 +1,48 @@
+@startuml IHash_Sequence_Diagram
+title IHash — Secuencia de Cálculo de Hash (CU-01)
+
+actor Host
+participant Application as APP
+participant ModuleManager as MM
+participant "lib/hash.so" as SO
+participant HashComponent as HC
+participant "Sha256Engine" as ENG
+
+== Carga del módulo ==
+Host -> APP : app.initialize()
+APP -> MM : load_module("./lib/hash")
+MM -> SO : dlopen("lib/hash.so")
+MM -> SO : dlsym("get_api_version")
+MM -> SO : dlsym("create_component")
+MM -> SO : dlsym("destroy_component")
+SO --> MM : símbolos resueltos
+MM --> APP : shared_ptr<SharedLibrary>
+APP --> Host : ok
+
+== Creación de instancia ==
+Host -> APP : app.run()
+APP -> MM : create_instance<IHash>("hash")
+MM -> SO : get_api_version()
+SO --> MM : CURRENT_API_VERSION (1)
+MM -> SO : create_component()
+SO -> HC : new HashComponent()
+HC --> SO : IComponent*
+SO --> MM : IComponent*
+MM -> MM : dynamic_cast<IHash*>
+MM -> MM : crear custom deleter (shared_ptr)
+MM --> APP : shared_ptr<IHash>
+APP --> Host : ok
+
+== Cálculo de hash ==
+Host -> APP : upload file (data, len)
+APP -> HC : get_hash_size(SHA256, &size)
+HC --> APP : size = 64
+APP -> APP : alocar char[64]
+APP -> HC : hash(SHA256, data, len, hex, 64)
+HC -> ENG : compute(data, len)
+ENG -> ENG : SHA-256 algorithm
+ENG --> HC : hex string (64 chars)
+HC --> APP : ComponentResult::SUCCESS
+APP --> Host : hash + SUCCESS
+
+@enduml

@@ -1,0 +1,41 @@
+@startuml IHash_Infrastructure
+title IHash — Relación con Infraestructura
+
+skinparam componentStyle rectangle
+skinparam shadowing false
+
+package "Host" {
+  component Main as MAIN
+  component Application as APP
+  component ModuleManager as MM
+  component SharedLibrary as SL
+}
+
+package "lib/hash.so\n(Componente)" {
+  component "C-API\n(extern \"C\")" as CAPI
+  component HashComponent as HC
+  database "Engines\n(SHA256/SHA1/MD5)" as ENG
+}
+
+MAIN --> APP : instancia
+APP --> MM : consume
+MM --> SL : envuelve
+SL --> CAPI : dlopen / dlsym
+CAPI --> HC : create_component()
+HC --> ENG : delega
+
+note right of MM
+  Template genérico:
+  create_instance<IHash>()
+  Validación ABI (get_api_version)
+  dynamic_cast + custom deleter
+end note
+
+note right of CAPI
+  Funciones exportadas:
+  · get_api_version()
+  · create_component()
+  · destroy_component()
+end note
+
+@enduml
