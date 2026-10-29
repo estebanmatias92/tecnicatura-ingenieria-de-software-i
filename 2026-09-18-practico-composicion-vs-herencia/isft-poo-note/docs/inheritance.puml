@@ -1,0 +1,30 @@
+@startuml
+!theme plain
+skinparam classAttributeIconSize 0
+
+title Composición vs Herencia — Versión Herencia (AudioPlayer)
+
+class PlayerBase {
+  +open(filePath: String): bool
+  +play(): bool
+  +stop(): bool
+  +setVolume(value: float)
+  #volume: float
+  #isOpen: bool
+  #isPlaying: bool
+}
+
+class AudioPlayer {
+  +open(filePath: String): bool
+  +play(): bool
+  +stop(): bool
+  +setVolume(value: float)
+}
+
+PlayerBase <|-- AudioPlayer
+
+note right of AudioPlayer
+  Herencia: AudioPlayer extiende PlayerBase.
+  Reutiliza comportamiento vía subclase.
+end note
+@enduml

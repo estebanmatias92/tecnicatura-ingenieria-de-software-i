@@ -1,0 +1,31 @@
+@startuml
+!theme plain
+skinparam classAttributeIconSize 0
+
+title Composición vs Herencia — Versión Composición (AudioPlayer)
+
+class AudioSource {
+  +open(filePath: String): bool
+  +play(): bool
+  +stop(): bool
+  +setVolume(value: float)
+  #volume: float
+  #isOpen: bool
+  #isPlaying: bool
+}
+
+class AudioPlayer {
+  +open(filePath: String): bool
+  +play(): bool
+  +stop(): bool
+  +setVolume(value: float)
+  -source: AudioSource
+}
+
+AudioPlayer --> "1" AudioSource : compone
+
+note right of AudioPlayer
+  Composición: AudioPlayer delega a AudioSource.
+  Flexibilidad: fuente intercambiable sin subclase.
+end note
+@enduml
